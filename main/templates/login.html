@@ -1,0 +1,69 @@
+{% extends 'base.html '%}
+
+{% block content %}
+<div class="container-fluid" style="background-color:white"> 
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                    {% for message in messages %}
+                    {% if message.tags == 'info' %}
+                    <h4 style="margin-left:15px;margin-top: 10px;color: red;font-size: 14px">{{message}}</h4>
+                    {% endif %}
+                    {% endfor %}
+                <div class="col-sm-12 text-center" style="margin-bottom: 20px;margin-top:10px">
+                <h2>
+                    Sign in
+                </h2>
+                <form action="{% url 'main:login_signin' %}" style="display: block; margin-bottom: 20px" method="POST">
+                    {% csrf_token %}
+                        <div class="form-group">
+                                <input type="text" name="email" id="Email" tabindex="1" style=" text-align:center" class="form-control" placeholder="Email ID / Username" value="">
+                        </div>
+                        <div class="form-group">
+                                <input type="password" name="password" id="password" tabindex="2" style=" text-align:center" class="form-control" placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn btn-success">Sign in</button>
+                </form>
+                <a href="">
+                <h4 style=" font-size:14px">Forget password?</h4>
+                </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+                <div class="row">
+                    {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <h4 style="margin-left:15px;margin-top: 10px;color: red;font-size: 14px">{{message}}</h4>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="col-sm-12 text-center" style="margin-bottom: 20px;margin-top:10px;border-left: 1px solid">
+                    <h2>
+                        Sign up
+                    </h2>
+                    <form action="{% url 'main:signup' %}" style="display: block" method="POST">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" name="username" id="username" tabindex="1" style=" text-align:center" class="form-control" placeholder="Username" value={{username}}>
+                            </div>
+                            <div class="form-group">
+                                    <input type="text" name="fname" id="fname" tabindex="1" style=" text-align:center" class="form-control" placeholder="First Name" value={{fname}}>
+                            </div>
+                            <div class="form-group">
+                                    <input type="text" name="lname" id="lname" tabindex="1" style=" text-align:center" class="form-control" placeholder="Last Name" value={{lname}}>
+                            </div>
+                            <div class="form-group">
+                                    <input type="email" name="email" id="Email" tabindex="1" style=" text-align:center" class="form-control" placeholder="Email" value={{email}}>
+                            </div>
+                            <div class="form-group">
+                                    <input type="password" name="password" id="password" tabindex="2" style=" text-align:center" class="form-control" placeholder="Password" value={{password}}>
+                            </div>
+                            <button type="submit" class="btn btn-success">Sign Up</button>
+                    </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock %}

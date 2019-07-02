@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% block content %}
+<div class="container-fluid wholefont">
+    <div class="container-fluid maincontent">
+        {% if query != None %}
+        <div class="row"><h4 style="padding:15px">Search results for: "{{query}}"</h4></div>
+        {% endif %}
+        {% if cat != None %}
+        <div class="row">
+        <div class="col-sm-12 text-center">
+            <h4 style="padding:15px;text-decoration: underline;font-weight: bold">{{cat|title}}</h4>
+        </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            {% for image in images %}
+            <div class="col-sm-3" style="margin-bottom:20px;margin-top: 20px">
+                <a href="{% url 'main:detail' image.id %}">
+                <div class="card bg-light" style="padding:5px">
+                    <div class="view overlay zoom">
+                        <img class="thumbnail" src="{{ image.thumbnail_url }}" alt="">
+                        <div class="mask flex-center">
+                            <p class="white-text">{{ image.title }}</p>
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="modal fade bd-example-modal-lg" id="exampleModalCenter{{image.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" style="margin-left:15px" id="exampleModalCenterTitle">By: {{ image.photographer }}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                            <div class="card bg-light">
+                                <div class="view overlay">
+                                <img class="modalimage" src="{{image.thumbnail_url}}" alt="">
+                                <div class="mask flex-center rgba-black-light">
+                                    <h2 class="white-text">{{ image.title}}</h2>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-2 text-left" style="margin-left:0px;font-size: 30px">
+                                <input type="hidden" id="picid", value="{{image.id}}">
+                                {% with l=image.id|getlike:request.user.id %}
+                                <i class="fa fa-heart heart" {% if l == 'like' %} style="padding-left:15px;color:red" {% else %} style="padding-left: 15px" {% endif %} id="{{image.id}}" onclick="heart_color_change('{{image.id}}')"></i>    
+                                {% endwith %}
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{image.share_link}}">
+                                <i class="fa fa-share heart" style="padding-left:15px"></i>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                    <form class="form-inline" action="{% url 'main:home' %}" method="GET">
+                                            <input class="form-control" type="text" placeholder="Comment.." aria-label="Search" name="query">
+                                            <button class="btn btn-outline-success" type="submit">Submit</button>
+                                          </form>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                          <a href="{{ image.url }}" download>
+                          <button type="button" class="btn btn-primary">Download</button>
+                          </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor%}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

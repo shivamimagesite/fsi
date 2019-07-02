@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" Content="IE-edge">
+    <meta name="viewport" content="width=device-width">
+    <title>Free Stock Images</title>
+    <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.2/css/mdb.min.css" rel="stylesheet">
+    <style>
+        header::before {
+            bottom: 0;
+            content: "";
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: block;
+            background-image: url("{{ backimage.background_image_link}}");
+            background-size: fill;
+            background-repeat: repeat;
+            transform-origin: center center 0;
+            transform: translateZ(-1px) scale(2);
+            z-index: -1;
+            min-height: 100vh;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+    {% block content %}
+
+    {% endblock %}
+    {% include 'footer.html' %}
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.2/js/mdb.min.js"></script>
+    <script>
+        function heart_color_change(pid) {
+            var like = "";
+            if (event.target.style.color == "red") {
+                event.target.style.color = "white";
+                like = "dislike";
+            }
+            else {
+                event.target.style.color = "red";
+                like = "like";
+            }
+            create_post(pid, like);
+        }
+
+        function create_post(pid, like) {
+            console.log("create post is working!") // sanity check
+            $.ajax({
+                url: "like/", // the endpoint
+                type: "POST", // http method
+                data: { picid: pid, liked: like }, // data sent with the post request
+                csrfmiddlewaretoken: "{{csrf_token}}",
+
+                // handle a successful response
+                success: function (json) {
+                    //alert("Liked");
+                    $('#like_count').text(json.like_count);
+                },
+
+                // handle a non-successful response
+                error: function (xhr, errmsg, err) {
+                    //alert("Error "+xhr + err);
+                }
+            });
+        };
+    </script>
+
+<script>
+    function comment() {
+            console.log("adding comment!") // sanity check
+            if($('#comment').val() != ''){
+            $.ajax({
+                url: "comment/", // the endpoint
+                type: "POST", // http method
+                data: {comment: $('#comment').val() }, // data sent with the post request
+                csrfmiddlewaretoken: "{{csrf_token}}",
+
+                // handle a successful response
+                success: function (json) {
+                    //alert("Liked");
+                    $('#comment').val('');
+                    $('#commentcontainer').append("<div class='container-fluid' style='margin-bottom: 30px'><div class='row'><h5  style='margin-right: 20px'>"+json.name+"<h5>"+"just now"+"</div><div class='row'>"+json.comment+"</div>");   
+
+                },
+
+                // handle a non-successful response
+                error: function (xhr, errmsg, err) {
+                    //alert("Error "+xhr + err);
+                }
+            });
+            }
+        };
+    </script>
+
+<script>
+        function update_cat(cid) {
+                console.log("updating!") // sanity check
+                $.ajax({
+                    url: "update_category/", // the endpoint
+                    type: "POST", // http method
+                    data: {cat: $('#cat'+cid).val(), cid: cid }, // data sent with the post request
+                    csrfmiddlewaretoken: "{{csrf_token}}",
+    
+                    // handle a successful response
+                    success: function (json) {
+                        //alert("Liked");
+                        $('#row'+cid).append("<p id='upp' style='margin-left:10px'>Updated</p>");
+                        setTimeout(function(){
+                        $('#upp').remove();
+                        }, 2000);
+                    },
+    
+                    // handle a non-successful response
+                    error: function (xhr, errmsg, err) {
+                        //alert("Error "+xhr + err);
+                    }
+                });
+            };
+        </script>
+
+    <script>
+        var cw = $('.thumbnail').width();
+        var nh = cw * 3 / 4;
+        $('.thumbnail').css({ 'height': nh + 'px' });
+    </script>
+    <script>
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+    </script>
+
+    <script>
+        $("#tst").append("<div id='test'>hello</div>");
+        $("#test").delay(3200).fadeOut(300);
+    </script>
+
+    <script>
+    function count_download(picid){
+        $.ajax({
+                    url: "count_download/", // the endpoint
+                    type: "POST", // http method
+                    data: {picid : picid }, // data sent with the post request
+                    csrfmiddlewaretoken: "{{csrf_token}}",
+    
+                    // handle a successful response
+                    success: function (json) {
+                        //alert("Liked");
+                    },
+    
+                    // handle a non-successful response
+                    error: function (xhr, errmsg, err) {
+                        //alert("Error "+xhr + err);
+                    }
+                });
+    }
+    </script>
+</body>

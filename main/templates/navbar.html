@@ -1,0 +1,82 @@
+{% load static %}
+<div class="container-fluid wholefont">
+        <div class="row" style="background-color:rgb(255, 113, 113)">
+                <div class="col-sm-4">
+                  <a href="http://www.facebook.com" class="socialicon">
+                    <i class="fa fa-facebook-square socialmargin" data-toggle="tooltip" data-placement="bottom" title="Facebook"></i>
+                  </a>
+                  <a href="http://www.Twitter.com" class="socialicon">
+                    <i class="fa fa-twitter-square socialmargin" data-toggle="tooltip" data-placement="bottom" title="Twitter"></i>
+                  </a>
+                  <a href="http://www.YouTube.com" class="socialicon">
+                    <i class="fa fa-youtube-square socialmargin" data-toggle="tooltip" data-placement="bottom" title="YouTube"></i>
+                  </a>
+                  <a href="http://www.Pinterest.com" class="socialicon">
+                    <i class="fa fa-pinterest-square socialmargin" data-toggle="tooltip" data-placement="bottom" title="Pinterest"></i>
+                  </a>
+                  </div>
+                <div class="col-sm-8 text-right phonenumber">
+                    Ph: +919651959918
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <header>
+                        <h1>
+                        FREE STOCK IMAGES
+                        </h1>
+                        <p>
+                            For those who click
+                        </p>
+                    </header>
+                </div>
+            </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{%url 'main:home' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              
+            {% if request.user.is_authenticated %}
+            <a class="nav-link" href="{% url 'main:logouts' %}">
+                Logout
+            </a>
+            {% else %}
+            <a class="nav-link" href="{% url 'main:login' %}">
+                Login
+            </a>
+            {% endif %}
+                <span class="sr-only">(current)</span>
+            </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About us</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Category
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a href="{% url 'main:home' %}" class="dropdown-item">All</a>
+                {% for category in categories %}
+                <a {% if cat == category.name %} class="dropdown-item active" {% else %} class="dropdown-item" {% endif %} 
+                href="{% url 'main:category' category.name %}">{{category.name|title}}</a>
+                {% endfor %}
+              </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" {% if request.user.is_superuser %} {% else %} hidden {% endif %} href="{% url 'main:admin_page' %}">Admin</a>
+              </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0" action="{% url 'main:home' %}" method="GET">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+      </div>

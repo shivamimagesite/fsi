@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load app_filters %}
+{% block content %}
+
+<div class="container-fluid wholefont maincontent">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h3 style="margin-top:20px;text-decoration:underline;font-weight: bold">{{pic.title}}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <h4 style="margin-left: 15px">By: {{ pic.photographer }}</h4>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10 text-center" style="margin-bottom: 20px">
+            <div class="card bg-light detailcard">
+                <img class="modalimagedetail" src="{{pic.url}}" alt="">
+            </div>
+            </div>
+            <div class="col-sm-1"></div>
+    </div>
+    <div class="row">
+            <div class="col-sm-3 text-left" style="margin-left:0px;font-size: 30px">
+                    <input type="hidden" id="picid", value="{{pic.id}}">
+                    {% with l=pic.id|getlike:request.user.id %}
+                    <i class="fa fa-heart heart" {% if l == 'like' %} style="padding-left:15px;color:red" {% else %} style="padding-left: 15px" {% endif %} id="{{pic.id}}"
+                    {% if request.user.is_authenticated %} onclick="heart_color_change('{{pic.id}}')" {% else %} onclick="alert('Login required to like!')" {% endif %}></i>    
+                    {% endwith %}
+                    <p style="display: inline" id="like_count">{{ pic.id|like_count }}</p>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=127.0.0.1:8000{{request.path}}">
+                    <i class="fa fa-share heart" style="padding-left:15px"></i>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <input type="hidden" id="uid" value="{{ request.user.id }}">
+                    <input class="form-control" type="text" id="comment" placeholder="Comment..">
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-outline-success" {% if request.user.is_authenticated %} onclick="comment()" 
+                    {% else %} onclick="alert('Login required to comment!')"  {%endif %}>Submit</button>
+                </div>
+                <div class="col-sm-3 text-right">
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+              <a href="{{ pic.url }}" download>
+              <button type="button" onclick="count_download()" class="btn btn-primary">Download</button>
+              </a>
+              </div>
+    </div>
+    <div class="row">
+        <h4 style="margin-left: 15px">Comments:</h4>
+    </div>
+    <hr>
+    <div class="container-fluid" id="commentcontainer">
+    {% if pic.comments is not None %}
+    {% with comms=pic.comments|get_comments %}
+    {% for comm in comms %}
+        <!-- <div class="row commentstyle">
+            <div class="col-sm-1" style="border-right: 1px solid">
+                {{comm|getname}}
+            </div>
+            <div class="col-sm-5">
+                {{comm|getcomment}}  -----{{comm|gettime}}
+            </div>
+        </div> -->
+        <div class="container-fluid" style="margin-bottom: 30px">
+            <div class="row">
+                <h5 style="margin-right: 20px">{{comm|getname}}</h5>{{comm|gettime}}
+            </div>
+            <div class="row">
+                {{comm|getcomment}}
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    </div>
+    <div class="row" style="margin-top: 50px">
+    </div>
+</div>
+
+{% endblock %}
